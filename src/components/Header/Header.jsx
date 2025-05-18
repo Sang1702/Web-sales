@@ -1,11 +1,12 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaHeart, FaShoppingCart, FaUser } from 'react-icons/fa';
 
 const Header = () => {
     const [showUserMenu, setShowUserMenu] = useState(false);
     const menuRef = useRef(null);
     const navigate = useNavigate();
+    const location = useLocation();
 
     // Temporary auth state - will be replaced with actual auth state
     const isAuthenticated = true;
@@ -33,6 +34,7 @@ const Header = () => {
         // TODO: Implement logout logic
         console.log('Logging out...');
         setShowUserMenu(false);
+        navigate('/login');
     };
 
     return (
@@ -92,51 +94,51 @@ const Header = () => {
                             </div>
 
                             {/* Icons */}
-                            <div className="flex items-center gap-4">
-                                <button className="hover:text-primary">
-                                    <FaHeart size={24} />
-                                </button>
-                                <button className="relative hover:text-primary">
-                                    <FaShoppingCart size={24} />
-                                    <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                                        2
-                                    </span>
-                                </button>
-
-                                {/* User Menu */}
-                                <div className="relative" ref={menuRef}>
-                                    <button
-                                        onClick={handleUserIconClick}
-                                        className="hover:text-primary focus:outline-none"
-                                    >
-                                        <FaUser size={24} />
+                            {isAuthenticated && !(location.pathname === '/login' || location.pathname === '/signup') && (
+                                <div className="flex items-center gap-4">
+                                    <button className="hover:text-primary">
+                                        <FaHeart size={24} />
                                     </button>
-
-                                    {/* Dropdown Menu */}
-                                    {showUserMenu && isAuthenticated && (
-                                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
-                                            <Link to="/account" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                                Manage My Account
-                                            </Link>
-                                            <Link to="/orders" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                                My Order
-                                            </Link>
-                                            <Link to="/cancellations" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                                My Cancellations
-                                            </Link>
-                                            <Link to="/reviews" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
-                                                My Reviews
-                                            </Link>
-                                            <button
-                                                onClick={handleLogout}
-                                                className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
-                                            >
-                                                Logout
-                                            </button>
-                                        </div>
-                                    )}
+                                    <button className="relative hover:text-primary">
+                                        <FaShoppingCart size={24} />
+                                        <span className="absolute -top-2 -right-2 bg-primary text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                                            2
+                                        </span>
+                                    </button>
+                                    {/* User Menu */}
+                                    <div className="relative" ref={menuRef}>
+                                        <button
+                                            onClick={handleUserIconClick}
+                                            className="hover:text-primary focus:outline-none"
+                                        >
+                                            <FaUser size={24} />
+                                        </button>
+                                        {/* Dropdown Menu */}
+                                        {showUserMenu && isAuthenticated && (
+                                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg py-2 z-50">
+                                                <Link to="/account" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                                    Manage My Account
+                                                </Link>
+                                                <Link to="/orders" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                                    My Order
+                                                </Link>
+                                                <Link to="/cancellations" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                                    My Cancellations
+                                                </Link>
+                                                <Link to="/reviews" className="block px-4 py-2 text-gray-800 hover:bg-gray-100">
+                                                    My Reviews
+                                                </Link>
+                                                <button
+                                                    onClick={handleLogout}
+                                                    className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-100"
+                                                >
+                                                    Logout
+                                                </button>
+                                            </div>
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                            )}
                         </div>
                     </div>
                 </div>

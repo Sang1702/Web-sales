@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
 import signupImage from '../assets/images/signup-image.png';
@@ -11,6 +11,7 @@ const SignUpPage = () => {
         password: '',
     });
     const [errors, setErrors] = useState({});
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -39,16 +40,34 @@ const SignUpPage = () => {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
         if (validateForm()) {
-            console.log('Form submitted:', formData);
+            try {
+                const res = await fetch('http://localhost:3000/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        username: formData.name,
+                        email: formData.email,
+                        password: formData.password
+                    })
+                });
+                const data = await res.text();
+                if (res.ok) {
+                    alert('Đăng ký thành công!');
+                    navigate('/');
+                } else {
+                    alert('Lỗi: ' + data);
+                }
+            } catch (error) {
+                alert('Lỗi kết nối server!');
+            }
         }
     };
 
     const handleGoogleSignUp = () => {
-        // Implement Google Sign up logic
-        console.log('Google Sign up clicked');
+        // Implementation of handleGoogleSignUp function
     };
 
     return (
